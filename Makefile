@@ -1,7 +1,7 @@
 FLAGS= -Wall -g
-LIBRARIES= -lcriterion
+LIBRARIES= -lcriterion -lutil
 INCLUDES= -I./
-OBJECTS= ./build/logging/hello.o
+OBJECTS= ./build/logging/hello.o ./build/containers/buffer.o
 TESTS= containers/buffer_test.c containers/buffer.c
 TARGETS= ./build/targets
 
@@ -19,6 +19,9 @@ clean:
 	@ rm $(TARGETS)/main
 	@ rm -rf $(OBJECTS)
 	@ echo --cleaned--
+
+./build/containers/buffer.o: ./containers/buffer.c
+	@ cc ./containers/buffer.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/containers/buffer.o
 
 ./build/logging/hello.o: ./logging/hello.c
 	@cc ./logging/hello.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/logging/hello.o

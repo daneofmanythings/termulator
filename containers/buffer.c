@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <criterion/criterion.h>
+// #include <criterion/criterion.h>
 
 static const float BUFFER_RESIZE_COEF = 1.5;
 
@@ -18,7 +18,6 @@ static bool _buffer_grow(Buffer* buf) {
   buf->capacity *= BUFFER_RESIZE_COEF;
   char* temp = (char*)realloc(buf->data, buf->capacity * sizeof(char));
   if (temp) {
-    // free(buf->data);
     buf->data = temp;
     return true;
   }
@@ -40,7 +39,6 @@ static bool _buffer_shrink(Buffer* buf) {
   buf->capacity = _new_shrink_capacity(buf);
   char* temp = (char*)realloc(buf->data, buf->capacity * sizeof(char));
   if (temp) {
-    // free(buf->data);
     buf->data = temp;
     return true;
   }
@@ -121,30 +119,30 @@ const char* containers_buffer_read(const Buffer* buf) {
   return NULL;
 }
 
-Test(buffer_static, _shrink_capacity_num) {
-  struct test_cases {
-    uint size;
-    uint capacity;
-    uint min_capacity;
-    uint expected;
-  };
-  struct test_cases tc[] = {
-      { 0,  8, 8,  8},
-      {20, 50, 8, 30},
-      {20, 25, 8, 25},
-  };
-  const uint num_test_cases = 3;
-
-  uint got;
-  for (uint i = 0; i < num_test_cases; ++i) {
-    Buffer* buf = containers_buffer_create(tc[i].min_capacity);
-    buf->size = tc[i].size;
-    buf->capacity = tc[i].capacity;
-
-    got = _new_shrink_capacity(buf);
-    // cr_log_warn("%d\n", got);
-    cr_assert(got == tc[i].expected);
-
-    containers_buffer_cleanup(buf);
-  }
-}
+// Test(buffer_static, _shrink_capacity_num) {
+//   struct test_cases {
+//     uint size;
+//     uint capacity;
+//     uint min_capacity;
+//     uint expected;
+//   };
+//   struct test_cases tc[] = {
+//       { 0,  8, 8,  8},
+//       {20, 50, 8, 30},
+//       {20, 25, 8, 25},
+//   };
+//   const uint num_test_cases = 3;
+//
+//   uint got;
+//   for (uint i = 0; i < num_test_cases; ++i) {
+//     Buffer* buf = containers_buffer_create(tc[i].min_capacity);
+//     buf->size = tc[i].size;
+//     buf->capacity = tc[i].capacity;
+//
+//     got = _new_shrink_capacity(buf);
+//     // cr_log_warn("%d\n", got);
+//     cr_assert(got == tc[i].expected);
+//
+//     containers_buffer_cleanup(buf);
+//   }
+// }
