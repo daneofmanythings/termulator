@@ -1,8 +1,18 @@
 FLAGS= -Wall -g
 LIBRARIES= -lcriterion -lutil
 INCLUDES= -I./
-OBJECTS= ./build/containers/buffer.o ./build/ttf_loader/ttf_loader.o ./build/ttf_loader/tables/font_directory.o ./build/ttf_loader/tables/os2.o
-TESTS= src/containers/buffer_test.c src/containers/buffer.c
+
+OBJECTS= \
+				 ./build/containers/buffer.o \
+				 ./build/ttf_loader/ttf_loader.o \
+				 ./build/ttf_loader/tables/font_directory.o \
+				 ./build/ttf_loader/tables/os2.o \
+				 ./build/ttf_loader/tables/font_table.o \
+
+TESTS= \
+			 src/containers/buffer_test.c \
+			 src/containers/buffer.c \
+
 TARGETS= ./build/targets
 
 build: $(OBJECTS)
@@ -31,3 +41,6 @@ clean:
 
 ./build/ttf_loader/tables/os2.o: ./src/ttf_loader/tables/os2.c
 	@ cc ./src/ttf_loader/tables/os2.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/os2.o
+
+./build/ttf_loader/tables/font_table.o: ./src/ttf_loader/tables/font_table.c
+	@ cc ./src/ttf_loader/tables/font_table.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/font_table.o
