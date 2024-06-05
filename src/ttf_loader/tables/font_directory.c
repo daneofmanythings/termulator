@@ -82,6 +82,15 @@ font_directory_t* font_directory_create(FILE* font_ptr) {
   return font_directory;
 }
 
+void font_directory_destroy(font_directory_t* fd) {
+  for (size_t i = 0; i < fd->offset_subtable.num_tables; ++i) {
+    free(fd->table_directories[i]);
+    fd->table_directories[i] = NULL;
+  }
+  free(fd);
+  fd = NULL;
+}
+
 void font_directory_print(font_directory_t* font_directory) {
   offset_subtable_print(&font_directory->offset_subtable);
 

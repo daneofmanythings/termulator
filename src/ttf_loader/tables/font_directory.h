@@ -33,6 +33,7 @@ typedef struct font_directory {
 } font_directory_t;
 
 font_directory_t* font_directory_create(FILE* font_ptr);
+void font_directory_destroy(font_directory_t* fd);
 void font_directory_print(font_directory_t* font_directory);
 
 #endif // !DEBUG

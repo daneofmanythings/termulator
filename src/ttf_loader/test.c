@@ -18,6 +18,6 @@ int main(void) {
   font_directory_print(font_directory);
 
   fclose(font_ptr);
-  free(font_directory);
+  font_directory_destroy(font_directory);
   return EXIT_SUCCESS;
 }
