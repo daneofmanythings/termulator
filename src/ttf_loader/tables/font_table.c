@@ -1,5 +1,7 @@
-#include "font_table.h"
 #include <string.h>
+
+#include "font_table.h"
+#include "os2.h"
 
 enum { // int encoded table names
   DSIG = 68083073071,
@@ -26,6 +28,8 @@ enum { // int encoded table names
 
 void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   uint64_t intified_tag = intify_tag(table_directory->tag);
+  uint8_t tag_string[5] = {0};
+
   switch (intified_tag) {
   case DSIG:
     break;
@@ -36,7 +40,7 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case GPOS:
     break;
   case OS2:
-    break;
+    return os2_table_create(font_file, table_directory);
   case VDMX:
     break;
   case cmap:
@@ -68,7 +72,6 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case prep:
     break;
   default:
-    uint8_t tag_string[5] = {0};
     memcpy(tag_string, table_directory->tag, 4);
     tag_string[4] = '\0';
     printf("unknown table: %s (%lu)\n", tag_string, intified_tag);
