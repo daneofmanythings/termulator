@@ -1,5 +1,5 @@
 FLAGS= -Wall -g
-LIBRARIES= -lcriterion -lutil
+LIBRARIES= -lcriterion -lutil -lm
 INCLUDES= -I./
 
 OBJECTS= \
@@ -12,11 +12,13 @@ OBJECTS= \
 TESTS= \
 			 src/containers/buffer_test.c \
 			 src/containers/buffer.c \
+			 src/ttf_loader/tables/font_table.c \
+			 src/ttf_loader/tables/font_table_test.c \
 
 TARGETS= ./build/targets
 
 build: $(OBJECTS)
-	@ cc main.c $(FLAGS) $(INCLUDES) $(OBJECTS) -o $(TARGETS)/main
+	@ cc main.c $(FLAGS) $(INCLUDES) $(OBJECTS) $(LIBRARIES) -o $(TARGETS)/main
 
 test: $(TESTS)
 	@ cc $(TESTS) $(FLAGS) $(INCLUDES) $(LIBRARIES) -o $(TARGETS)/test
