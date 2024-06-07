@@ -1,4 +1,5 @@
 #include "font_directory.h"
+#include "../../lib.h"
 
 static void offset_subtable_be_to_host(offset_subtable_t* offset_subtable) {
   offset_subtable->scalar_type = be32toh(offset_subtable->scalar_type);
@@ -37,18 +38,9 @@ void table_directory_print(table_directory_t* table_directory) {
   printf("checksum: %d\n", table_directory->checksum);
 }
 
-font_directory_t* font_directory_create(FILE* font_ptr) {
+font_directory_t* font_directory_create(FILE* font_file) {
   offset_subtable_t offset_subtable;
-  size_t result = fread(&offset_subtable, sizeof(offset_subtable), 1, font_ptr);
-  if (result != 1) {
-    if (feof(font_ptr)) {
-      fprintf(stderr, "unexpected end of file\n");
-    } else if (ferror(font_ptr)) {
-      fprintf(stderr, "error reading from file\n");
-    }
-    fclose(font_ptr);
-    exit(1);
-  }
+  tl_fread(&offset_subtable, sizeof(offset_subtable), 1, font_file);
   offset_subtable_be_to_host(&offset_subtable);
 
   font_directory_t* font_directory = (font_directory_t*)malloc(
@@ -65,17 +57,7 @@ font_directory_t* font_directory_create(FILE* font_ptr) {
       fprintf(stderr, "font_directory::table_directory_t::malloc\n");
       exit(1);
     }
-    size_t result =
-        fread(font_directory->table_directories[i], sizeof(table_directory_t), 1, font_ptr);
-    if (result != 1) {
-      if (feof(font_ptr)) {
-        fprintf(stderr, "unexpected end of file\n");
-      } else if (ferror(font_ptr)) {
-        fprintf(stderr, "error reading from file\n");
-      }
-      fclose(font_ptr);
-      exit(1);
-    }
+    tl_fread(font_directory->table_directories[i], sizeof(table_directory_t), 1, font_file);
     table_directory_be_to_host(font_directory->table_directories[i]);
   }
 

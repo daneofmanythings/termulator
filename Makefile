@@ -3,10 +3,12 @@ LIBRARIES= -lcriterion -lutil -lm
 INCLUDES= -I./
 
 OBJECTS= \
+				 ./build/lib/io.o \
 				 ./build/containers/buffer.o \
 				 ./build/ttf_loader/ttf_loader.o \
 				 ./build/ttf_loader/tables/font_directory.o \
 				 ./build/ttf_loader/tables/os2.o \
+				 ./build/ttf_loader/tables/gasp.o \
 				 ./build/ttf_loader/tables/font_table.o \
 
 TESTS= \
@@ -35,6 +37,9 @@ clean:
 ./build/containers/buffer.o: ./src/containers/buffer.c
 	@ cc ./src/containers/buffer.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/containers/buffer.o
 
+./build/lib/io.o: ./src/lib/io.c
+	@ cc ./src/lib/io.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/lib/io.o
+
 ./build/ttf_loader/ttf_loader.o: ./src/ttf_loader/ttf_loader.c
 	@ cc ./src/ttf_loader/ttf_loader.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/ttf_loader.o
 
@@ -43,6 +48,9 @@ clean:
 
 ./build/ttf_loader/tables/os2.o: ./src/ttf_loader/tables/os2.c
 	@ cc ./src/ttf_loader/tables/os2.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/os2.o
+
+./build/ttf_loader/tables/gasp.o: ./src/ttf_loader/tables/gasp.c
+	@ cc ./src/ttf_loader/tables/gasp.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/gasp.o
 
 ./build/ttf_loader/tables/font_table.o: ./src/ttf_loader/tables/font_table.c
 	@ cc ./src/ttf_loader/tables/font_table.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/font_table.o

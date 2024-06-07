@@ -1,10 +1,9 @@
 #include <stdlib.h>
 
 #include "./src/ttf_loader.h"
-#include "./src/ttf_loader/tables/font_directory.h"
-#include "src/ttf_loader/tables/font_table.h"
+#include "src/ttf_loader/tables/font_directory.h"
 
-static const char* FONT_PATH = "/usr/share/fonts/truetype/lao/Phetsarath_OT.ttf";
+static const char* FONT_PATH = "/usr/share/fonts/truetype/ubuntu/Ubuntu-L.ttf";
 
 int main(void) {
 

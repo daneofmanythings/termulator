@@ -1,5 +1,9 @@
 #include "os2.h"
+#include "../../lib.h"
+#include "font_table.h"
+
 #include <endian.h>
+#include <stdint.h>
 #include <stdio.h>
 
 static void os2_table_correct_endianness(os2_table_t* table);
@@ -15,11 +19,12 @@ os2_table_t* os2_table_create(FILE* font_file, table_directory_t* table_director
   }
 
   // copy the file over
-  fseek(font_file, table_directory->offset, SEEK_SET);
-  fread(table, table_directory->length, 1, font_file);
+  tl_fseek("OS/2", font_file, table_directory->offset);
+  tl_fread(table, table_directory->length, 1, font_file);
 
   // correct the endianess
   os2_table_correct_endianness(table);
+
   // blank out last two fields for vertion 3 and 4
   if (table->version < 3) {
     return NULL;
@@ -28,8 +33,13 @@ os2_table_t* os2_table_create(FILE* font_file, table_directory_t* table_director
     table->us_lower_optical_point_size = 0;
     table->us_upper_optical_point_size = 0;
   }
+
+  // compare checksums
+  if (!font_table_verify_checksum("OS/2", table_directory->checksum, (uint32_t*)table,
+                                  sizeof(*table))) {
+  }
+
   // return the table
-  printf("loaded os2 table of version: %d\n", table->version);
   return table;
 }
 

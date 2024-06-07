@@ -1,13 +1,17 @@
 #include <string.h>
 
 #include "font_table.h"
+
+#include "gasp.h"
 #include "os2.h"
 
 enum { // int encoded table names
   DSIG = 68083073071,
+  FFTM = 70070084077,
   GDEF = 71068069070,
   GPOS = 71080079083,
   GSUB = 71083085066,
+  LTSH = 76084083072,
   OS2 = 79083047050,
   VDMX = 86068077088,
   cmap = 99109097112,
@@ -15,6 +19,7 @@ enum { // int encoded table names
   fpgm = 102112103109,
   gasp = 103097115112,
   glyf = 103108121102,
+  hdmx = 104100109120,
   head = 104101097100,
   hhea = 104104101097,
   hmtx = 104109116120,
@@ -33,11 +38,15 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   switch (intified_tag) {
   case DSIG:
     break;
+  case FFTM:
+    break;
   case GSUB:
     break;
   case GDEF:
     break;
   case GPOS:
+    break;
+  case LTSH:
     break;
   case OS2:
     return os2_table_create(font_file, table_directory);
@@ -50,8 +59,10 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case fpgm:
     break;
   case gasp:
-    break;
+    return gasp_table_create(font_file, table_directory);
   case glyf:
+    break;
+  case hdmx:
     break;
   case head:
     break;
