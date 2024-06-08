@@ -18,6 +18,7 @@ ttf_font_data_t* ttf_font_data_load_from_file(FILE* font_file) {
   }
 
   font_data->font_directory = font_directory;
+  // font_directory_print(font_data->font_directory);
 
   fclose(font_file);
   return font_data;

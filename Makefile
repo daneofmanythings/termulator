@@ -7,8 +7,11 @@ OBJECTS= \
 				 ./build/containers/buffer.o \
 				 ./build/ttf_loader/ttf_loader.o \
 				 ./build/ttf_loader/tables/font_directory.o \
-				 ./build/ttf_loader/tables/os2.o \
+				 ./build/ttf_loader/tables/cmap.o \
 				 ./build/ttf_loader/tables/gasp.o \
+				 ./build/ttf_loader/tables/head.o \
+				 ./build/ttf_loader/tables/hhea.o \
+				 ./build/ttf_loader/tables/os2.o \
 				 ./build/ttf_loader/tables/font_table.o \
 
 TESTS= \
@@ -46,11 +49,20 @@ clean:
 ./build/ttf_loader/tables/font_directory.o: ./src/ttf_loader/tables/font_directory.c
 	@ cc ./src/ttf_loader/tables/font_directory.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/font_directory.o
 
-./build/ttf_loader/tables/os2.o: ./src/ttf_loader/tables/os2.c
-	@ cc ./src/ttf_loader/tables/os2.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/os2.o
+./build/ttf_loader/tables/cmap.o: ./src/ttf_loader/tables/cmap.c
+	@ cc ./src/ttf_loader/tables/cmap.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/cmap.o
 
 ./build/ttf_loader/tables/gasp.o: ./src/ttf_loader/tables/gasp.c
 	@ cc ./src/ttf_loader/tables/gasp.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/gasp.o
+
+./build/ttf_loader/tables/head.o: ./src/ttf_loader/tables/head.c
+	@ cc ./src/ttf_loader/tables/head.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/head.o
+
+./build/ttf_loader/tables/hhea.o: ./src/ttf_loader/tables/hhea.c
+	@ cc ./src/ttf_loader/tables/hhea.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/hhea.o
+
+./build/ttf_loader/tables/os2.o: ./src/ttf_loader/tables/os2.c
+	@ cc ./src/ttf_loader/tables/os2.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/os2.o
 
 ./build/ttf_loader/tables/font_table.o: ./src/ttf_loader/tables/font_table.c
 	@ cc ./src/ttf_loader/tables/font_table.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/font_table.o

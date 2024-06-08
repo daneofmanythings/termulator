@@ -1,7 +1,6 @@
 #ifndef SRC_TTFLOADER_TABLES_FONTDIRECTORY_H
 #define SRC_TTFLOADER_TABLES_FONTDIRECTORY_H
 
-#include <endian.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

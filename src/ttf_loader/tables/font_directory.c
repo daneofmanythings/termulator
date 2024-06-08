@@ -1,5 +1,7 @@
 #include "font_directory.h"
 #include "../../lib.h"
+#include "../data_types.h"
+#include <endian.h>
 
 static void offset_subtable_be_to_host(offset_subtable_t* offset_subtable) {
   offset_subtable->scalar_type = be32toh(offset_subtable->scalar_type);
@@ -21,18 +23,16 @@ void offset_subtable_print(offset_subtable_t* offset_subtable) {
 }
 
 static void table_directory_be_to_host(table_directory_t* table_directory) {
-  // NOTE: tag is left as big endian.
+  table_directory->tag = be32toh(table_directory->tag);
   table_directory->checksum = be32toh(table_directory->checksum);
   table_directory->offset = be32toh(table_directory->offset);
   table_directory->length = be32toh(table_directory->length);
 }
 
 void table_directory_print(table_directory_t* table_directory) {
-  printf("[");
-  for (size_t j = 0; j < 4; ++j) {
-    printf("%c", table_directory->tag[j]);
-  }
-  printf("] ");
+  uint8_t tag_string[5];
+  tag_stringify(table_directory->tag, tag_string);
+  printf("[%s] ", tag_string);
   printf("offset: %d ", table_directory->offset);
   printf("length: %d ", table_directory->length);
   printf("checksum: %d\n", table_directory->checksum);

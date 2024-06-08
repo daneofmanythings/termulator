@@ -1,41 +1,43 @@
 #include <string.h>
 
+#include "../data_types.h"
+#include "cmap.h"
 #include "font_table.h"
-
 #include "gasp.h"
+#include "head.h"
+#include "hhea.h"
 #include "os2.h"
 
-enum { // int encoded table names
-  DSIG = 68083073071,
-  FFTM = 70070084077,
-  GDEF = 71068069070,
-  GPOS = 71080079083,
-  GSUB = 71083085066,
-  LTSH = 76084083072,
-  OS2 = 79083047050,
-  VDMX = 86068077088,
-  cmap = 99109097112,
-  cvt = 99118116032,
-  fpgm = 102112103109,
-  gasp = 103097115112,
-  glyf = 103108121102,
-  hdmx = 104100109120,
-  head = 104101097100,
-  hhea = 104104101097,
-  hmtx = 104109116120,
-  kern = 107101114110,
-  loca = 108111099097,
-  maxp = 109097120112,
-  name = 110097109101,
-  post = 112111115116,
-  prep = 112114101112,
+enum {
+  DSIG = 1146308935,
+  FFTM = 1195656518,
+  GDEF = 1,
+  GPOS = 1196445523,
+  GSUB = 1196643650,
+  LTSH = 1280594760,
+  OS2 = 1330851634,
+  VDMX = 1447316824,
+  cmap = 1668112752,
+  cvt = 1668707360,
+  fpgm = 1718642541,
+  gasp = 1734439792,
+  glyf = 1735162214,
+  hdmx = 1751412088,
+  head = 1751474532,
+  hhea = 1751672161,
+  hmtx = 1752003704,
+  kern = 1801810542,
+  loca = 1819239265,
+  maxp = 1835104368,
+  name = 1851878757,
+  post = 1886352244,
+  prep = 1886545264,
 };
 
 void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
-  uint64_t intified_tag = intify_tag(table_directory->tag);
   uint8_t tag_string[5] = {0};
 
-  switch (intified_tag) {
+  switch (table_directory->tag) {
   case DSIG:
     break;
   case FFTM:
@@ -54,6 +56,7 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
     break;
   case cmap:
     break;
+    // return cmap_table_create(font_file, table_directory);
   case cvt:
     break;
   case fpgm:
@@ -65,9 +68,9 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case hdmx:
     break;
   case head:
-    break;
+    return head_table_create(font_file, table_directory);
   case hhea:
-    break;
+    return hhea_table_create(font_file, table_directory);
   case hmtx:
     break;
   case kern:
@@ -83,9 +86,8 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case prep:
     break;
   default:
-    memcpy(tag_string, table_directory->tag, 4);
-    tag_string[4] = '\0';
-    printf("unknown table: %s (%lu)\n", tag_string, intified_tag);
+    tag_stringify(table_directory->tag, tag_string);
+    printf("unknown table: %s (%u)\n", tag_string, table_directory->tag);
   }
   return NULL;
 }
