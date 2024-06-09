@@ -16,6 +16,33 @@ head_table_t* head_table_create(FILE* font_file, table_directory_t* table_direct
   tl_fread(table, table_directory->length, 1, font_file);
 
   // TODO: implement the special checksum verification for this table.
+  // https://learn.microsoft.com/en-us/typography/opentype/spec/head
+
+  /*
+    The 'head' table is a special case in checksum calculations, as it includes
+    a checksumAdjustment field that is calculated and written after the table’s
+    checksum is calculated and written into the table directory entry, necessarily
+    invalidating that checksum value.
+
+    When generating font data, to calculate and write the 'head' table checksum and
+    checksumAdjustment field, do the following:
+
+    1. Set the checksumAdjustment field to 0.
+    2. Calculate the checksum for all tables including the 'head' table and
+       enter the value for each table into the corresponding record in the table directory.
+    3. Calculate the checksum for the entire font.
+    4. Subtract that value from 0xB1B0AFBA.
+    5. Store the result in the 'head' table checksumAdjustment field.
+
+    An application attempting to verify that the 'head' table has not changed should
+    calculate the checksum for that table assuming that the checksumAdjustment value
+    is zero, rather than the actual value in the font, before comparing the result with
+    the 'head' table record in the table directory.
+
+    Within a font collection file (see below), table checksums must reflect the tables as
+    they are in the collection file. The checksumAdjustment field in the 'head' table is
+    not used for collection files and may be set to zero.
+  */
   font_table_verify_checksum("head", table_directory->checksum, (uint32_t*)table,
                              table_directory->length);
 

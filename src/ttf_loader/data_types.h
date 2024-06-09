@@ -11,6 +11,7 @@ typedef int32_t FIXED;
 typedef int16_t F2DOT14;
 typedef int64_t LONGDATETIME;
 typedef uint32_t OFFSET32;
+typedef uint32_t VERSION16DOT16;
 
 static inline void tag_stringify(TAG tag, uint8_t tag_string[5]) {
   tag_string[4] = '\0';

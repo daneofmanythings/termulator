@@ -7,12 +7,13 @@ OBJECTS= \
 				 ./build/containers/buffer.o \
 				 ./build/ttf_loader/ttf_loader.o \
 				 ./build/ttf_loader/tables/font_directory.o \
+				 ./build/ttf_loader/tables/font_table.o \
 				 ./build/ttf_loader/tables/cmap.o \
 				 ./build/ttf_loader/tables/gasp.o \
 				 ./build/ttf_loader/tables/head.o \
 				 ./build/ttf_loader/tables/hhea.o \
+				 ./build/ttf_loader/tables/maxp.o \
 				 ./build/ttf_loader/tables/os2.o \
-				 ./build/ttf_loader/tables/font_table.o \
 
 TESTS= \
 			 src/containers/buffer_test.c \
@@ -60,6 +61,9 @@ clean:
 
 ./build/ttf_loader/tables/hhea.o: ./src/ttf_loader/tables/hhea.c
 	@ cc ./src/ttf_loader/tables/hhea.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/hhea.o
+
+./build/ttf_loader/tables/maxp.o: ./src/ttf_loader/tables/maxp.c
+	@ cc ./src/ttf_loader/tables/maxp.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/maxp.o
 
 ./build/ttf_loader/tables/os2.o: ./src/ttf_loader/tables/os2.c
 	@ cc ./src/ttf_loader/tables/os2.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/os2.o

@@ -13,6 +13,8 @@ ttf_font_data_t* ttf_font_data_load_from_file(FILE* font_file) {
   }
 
   for (size_t table_index = 0; table_index < num_tables; ++table_index) {
+    // TODO: implement a system for delaying certain tables under certain conditions
+    // in order to use data from other tables in the initialization of specific tables
     font_data->tables[table_index] =
         (void*)font_table_create(font_file, font_directory->table_directories[table_index]);
   }

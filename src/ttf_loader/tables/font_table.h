@@ -20,6 +20,13 @@ static uint32_t font_table_calculate_checksum(uint32_t* table, uint32_t length) 
   return sum;
 }
 
+/* NOTE:
+This function assumes that the length of any table is a multiple of four bytes,
+or that tables are padded with zero to four-byte aligned offsets. Actual table lengths
+recorded in the table directory should not include padding, however. To accommodate
+data with a length that is not a multiple of four, the below algorithm must be modified
+to treat the data as though it contains zero padding to a length that is a multiple of four.
+*/
 static bool font_table_verify_checksum(const char* name, uint32_t checksum, uint32_t* table,
                                        uint32_t length) {
   uint32_t calculated_checksum = font_table_calculate_checksum((uint32_t*)table, length);

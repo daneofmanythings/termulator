@@ -6,6 +6,7 @@
 #include "gasp.h"
 #include "head.h"
 #include "hhea.h"
+#include "maxp.h"
 #include "os2.h"
 
 enum {
@@ -78,7 +79,7 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case loca:
     break;
   case maxp:
-    break;
+    return maxp_table_create(font_file, table_directory);
   case name:
     break;
   case post:
