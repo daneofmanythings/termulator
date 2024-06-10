@@ -8,6 +8,7 @@
 #include "hhea.h"
 #include "maxp.h"
 #include "os2.h"
+#include "post.h"
 
 enum {
   DSIG = 1146308935,
@@ -83,7 +84,7 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case name:
     break;
   case post:
-    break;
+    return post_table_create(font_file, table_directory);
   case prep:
     break;
   default:
