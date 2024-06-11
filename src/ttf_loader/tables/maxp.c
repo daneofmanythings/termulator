@@ -1,6 +1,5 @@
 #include "maxp.h"
 #include "../../lib.h"
-#include "font_table.h"
 #include <endian.h>
 
 static void maxp_table_be_to_host(maxp_table_t* table);
@@ -13,8 +12,6 @@ maxp_table_t* maxp_table_create(FILE* font_file, table_directory_t* table_direct
 
   tl_fseek("maxp", font_file, table_directory->offset);
   tl_fread(table, table_directory->length, 1, font_file);
-  font_table_verify_checksum("maxp", table_directory->checksum, (uint32_t*)table,
-                             table_directory->length);
 
   maxp_table_be_to_host(table);
 

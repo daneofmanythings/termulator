@@ -1,5 +1,6 @@
 #include <string.h>
 
+#include "../../lib.h"
 #include "../data_types.h"
 #include "cmap.h"
 #include "font_table.h"
@@ -7,6 +8,7 @@
 #include "head.h"
 #include "hhea.h"
 #include "maxp.h"
+#include "name.h"
 #include "os2.h"
 #include "post.h"
 
@@ -37,7 +39,25 @@ enum {
 };
 
 void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
+  if (table_directory->tag == hhea || table_directory->tag == hmtx) {
+    return NULL;
+  }
   uint8_t tag_string[5] = {0};
+  tag_stringify(table_directory->tag, tag_string);
+  printf("%s\n", tag_string);
+
+  void* return_table = NULL;
+  uint32_t* table_data = (uint32_t*)calloc(1, table_directory->length); // slow
+  if (table_data == NULL) {
+    return NULL; // TODO: error handling
+  }
+  tl_fseek((const char*)tag_string, font_file, table_directory->offset);
+  tl_fread(table_data, table_directory->length, 1, font_file);
+  if (!font_table_verify_checksum((const char*)tag_string, table_directory->checksum, table_data,
+                                  table_directory->length)) {
+    // goto END; // TODO: error handling
+    ;
+  }
 
   switch (table_directory->tag) {
   case DSIG:
@@ -53,26 +73,30 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case LTSH:
     break;
   case OS2:
-    return os2_table_create(font_file, table_directory);
+    return_table = os2_table_create(table_data, table_directory);
+    break;
   case VDMX:
     break;
   case cmap:
+    return_table = cmap_table_create(font_file, table_directory);
     break;
-    // return cmap_table_create(font_file, table_directory);
   case cvt:
     break;
   case fpgm:
     break;
   case gasp:
-    return gasp_table_create(font_file, table_directory);
+    return_table = gasp_table_create(font_file, table_directory);
+    break;
   case glyf:
     break;
   case hdmx:
     break;
   case head:
-    return head_table_create(font_file, table_directory);
+    return_table = head_table_create(font_file, table_directory);
+    break;
   case hhea:
-    return hhea_table_create(font_file, table_directory);
+    return_table = hhea_table_create(table_data, table_directory);
+    break;
   case hmtx:
     break;
   case kern:
@@ -80,16 +104,23 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case loca:
     break;
   case maxp:
-    return maxp_table_create(font_file, table_directory);
+    return_table = maxp_table_create(font_file, table_directory);
+    break;
   case name:
+    return_table = name_table_create(font_file, table_directory);
     break;
   case post:
-    return post_table_create(font_file, table_directory);
+    return_table = post_table_create(font_file, table_directory);
+    break;
   case prep:
     break;
   default:
-    tag_stringify(table_directory->tag, tag_string);
     printf("unknown table: %s (%u)\n", tag_string, table_directory->tag);
   }
-  return NULL;
+
+END:
+  free(table_data);
+  table_data = NULL;
+
+  return return_table;
 }

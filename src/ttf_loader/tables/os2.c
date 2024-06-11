@@ -1,32 +1,20 @@
-#include "os2.h"
-#include "../../lib.h"
-#include "font_table.h"
-
 #include <endian.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
+#include "os2.h"
+
 static void os2_table_be_to_host(os2_table_t* table);
 
 // TODO: implement orrer handling
-os2_table_t* os2_table_create(FILE* font_file, table_directory_t* table_directory) {
-  // check that the correct table_directory was passed in.
-  //
-  // allocate memory
+os2_table_t* os2_table_create(uint32_t* table_data, table_directory_t* table_directory) {
   os2_table_t* table = (os2_table_t*)malloc(table_directory->length);
   if (table == NULL) {
     return NULL;
   }
 
-  // copy the file over
-  tl_fseek("OS/2", font_file, table_directory->offset);
-  tl_fread(table, table_directory->length, 1, font_file);
-  // compare checksums
-  if (!font_table_verify_checksum("OS/2", table_directory->checksum, (uint32_t*)table,
-                                  sizeof(*table))) {
-    // TODO: error handling
-  }
+  memcpy(table, table_data, table_directory->length);
 
   // correct the endianess
   os2_table_be_to_host(table);

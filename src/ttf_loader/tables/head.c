@@ -43,8 +43,6 @@ head_table_t* head_table_create(FILE* font_file, table_directory_t* table_direct
     they are in the collection file. The checksumAdjustment field in the 'head' table is
     not used for collection files and may be set to zero.
   */
-  font_table_verify_checksum("head", table_directory->checksum, (uint32_t*)table,
-                             table_directory->length);
 
   head_table_be_to_host(table);
 

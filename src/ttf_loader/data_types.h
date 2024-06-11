@@ -10,6 +10,7 @@ typedef uint32_t TAG;
 typedef int32_t FIXED;
 typedef int16_t F2DOT14;
 typedef int64_t LONGDATETIME;
+typedef uint16_t OFFSET16;
 typedef uint32_t OFFSET32;
 typedef uint32_t VERSION16DOT16;
 

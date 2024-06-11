@@ -1,34 +1,21 @@
 #include <assert.h>
 #include <endian.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "../../lib.h"
-#include "font_table.h"
+#include "font_directory.h"
 #include "hhea.h"
 
 static void hhea_table_be_to_host(hhea_table_t* table);
 
-hhea_table_t* hhea_table_create(FILE* font_file, table_directory_t* table_directory) {
+hhea_table_t* hhea_table_create(uint32_t* table_data, table_directory_t* table_directory) {
   hhea_table_t* table = (hhea_table_t*)malloc(table_directory->length);
   if (table == NULL) {
-    // TODO: error handling
-    return NULL;
+    return NULL; // TODO: error handling
   }
-
-  tl_fseek("hhea", font_file, table_directory->offset);
-  tl_fread(table, table_directory->length, 1, font_file);
-  font_table_verify_checksum("hhea", table_directory->checksum, (uint32_t*)table,
-                             table_directory->length);
+  memcpy(table, table_data, table_directory->length);
 
   hhea_table_be_to_host(table);
-
-  // these are constants. https://learn.microsoft.com/en-us/typography/opentype/spec/hhea
-  assert(table->major_version == 1);
-  assert(table->minor_version == 0);
-  for (size_t i = 0; i < 4; ++i) {
-    assert(table->_reserved[i] == 0);
-  }
-  assert(table->metric_data_format == 0);
 
   return table;
 }

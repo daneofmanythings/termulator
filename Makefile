@@ -13,6 +13,7 @@ OBJECTS= \
 				 ./build/ttf_loader/tables/head.o \
 				 ./build/ttf_loader/tables/hhea.o \
 				 ./build/ttf_loader/tables/maxp.o \
+				 ./build/ttf_loader/tables/name.o \
 				 ./build/ttf_loader/tables/os2.o \
 				 ./build/ttf_loader/tables/post.o \
 
@@ -65,6 +66,9 @@ clean:
 
 ./build/ttf_loader/tables/maxp.o: ./src/ttf_loader/tables/maxp.c
 	@ cc ./src/ttf_loader/tables/maxp.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/maxp.o
+
+./build/ttf_loader/tables/name.o: ./src/ttf_loader/tables/name.c
+	@ cc ./src/ttf_loader/tables/name.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/name.o
 
 ./build/ttf_loader/tables/os2.o: ./src/ttf_loader/tables/os2.c
 	@ cc ./src/ttf_loader/tables/os2.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/os2.o

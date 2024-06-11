@@ -1,6 +1,5 @@
 #include "post.h"
 #include "../../lib.h"
-#include "font_table.h"
 #include <assert.h>
 #include <endian.h>
 #include <string.h>
@@ -12,15 +11,6 @@ static void post_table_be_to_host(post_table_t* table);
 char* post_table_get_glyph_at(post_table_t* table, uint16_t glyph_num);
 
 post_table_t* post_table_create(FILE* font_file, table_directory_t* table_directory) {
-  uint32_t* verification = malloc(table_directory->length);
-  if (verification == NULL) {
-    return NULL; // TODO: error handling
-  }
-  tl_fseek("post checksum verification", font_file, table_directory->offset);
-  tl_fread(verification, table_directory->length, 1, font_file);
-  font_table_verify_checksum("post", table_directory->checksum, verification,
-                             table_directory->length);
-
   post_table_t* table = (post_table_t*)malloc(table_directory->length);
   if (table == NULL) {
     return NULL; // TODO: error handling
@@ -36,8 +26,6 @@ post_table_t* post_table_create(FILE* font_file, table_directory_t* table_direct
     fprintf(stderr, "ERROR: 'post' table version '2.5' is not supported.\n");
     free(table);
     table = NULL;
-    free(verification);
-    verification = NULL;
     return NULL;
   }
 
@@ -54,9 +42,6 @@ post_table_t* post_table_create(FILE* font_file, table_directory_t* table_direct
   tl_fread(string_data, string_data_length, 1, font_file);
 
   table->data.string_data = string_data;
-
-  free(verification);
-  verification = NULL;
 
   return table;
 }
@@ -77,6 +62,7 @@ static void post_table_be_to_host(post_table_t* table) {
   }
 }
 
+// TODO: validate the position within string_data. possibly store string_data length.
 char* post_table_get_glyph_at(post_table_t* table, uint16_t glyph_num) {
   if (glyph_num >= table->data.num_glyphs) {
     return NULL; // TODO: errror handling

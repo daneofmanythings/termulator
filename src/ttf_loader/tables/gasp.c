@@ -17,8 +17,6 @@ gasp_table_t* gasp_table_create(FILE* font_file, table_directory_t* table_direct
 
   tl_fseek("gasp_table_create", font_file, table_directory->offset);
   tl_fread(table, table_directory->length, 1, font_file);
-  font_table_verify_checksum("gasp", table_directory->checksum, (uint32_t*)table,
-                             table_directory->length);
 
   gasp_table_be_to_host(table);
 
