@@ -7,7 +7,7 @@
 typedef struct cmap_table {
   //
 } cmap_table_t;
-cmap_table_t* cmap_table_create(uint8_t* table_data, table_directory_t* table_directory);
+cmap_table_t* cmap_table_create(uint32_t* table_data, table_directory_t* table_directory);
 
 typedef struct encoding_record {
   uint16_t platform_id;

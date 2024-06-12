@@ -4,7 +4,7 @@
 
 static void maxp_table_be_to_host(maxp_table_t* table);
 
-maxp_table_t* maxp_table_create(uint8_t* table_data, table_directory_t* table_directory) {
+maxp_table_t* maxp_table_create(uint32_t* table_data, table_directory_t* table_directory) {
   maxp_table_t* table = (maxp_table_t*)malloc(sizeof(maxp_table_t));
   if (table == NULL) {
     return NULL; // TODO: error handling

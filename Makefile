@@ -38,6 +38,9 @@ run: build
 val: 
 	@ valgrind --tool=memcheck --leak-check=full $(TARGETS)/main
 
+gdb:
+	@ gdb ./build/targets/main -ex 'layout src'
+
 clean:
 	@ rm $(TARGETS)/main
 	@ rm -rf $(OBJECTS)

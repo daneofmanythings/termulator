@@ -72,29 +72,29 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case LTSH:
     break;
   case OS2:
-    return_table = os2_table_create((uint8_t*)table_data, table_directory);
+    return_table = os2_table_create(table_data, table_directory);
     break;
   case VDMX:
     break;
   case cmap:
-    return_table = cmap_table_create((uint8_t*)table_data, table_directory);
+    return_table = cmap_table_create(table_data, table_directory);
     break;
   case cvt:
     break;
   case fpgm:
     break;
   case gasp:
-    return_table = gasp_table_create((uint8_t*)table_data, table_directory);
+    return_table = gasp_table_create(table_data, table_directory);
     break;
   case glyf:
     break;
   case hdmx:
     break;
   case head:
-    return_table = head_table_create((uint8_t*)table_data, table_directory);
+    return_table = head_table_create(table_data, table_directory);
     break;
   case hhea:
-    return_table = hhea_table_create((uint8_t*)table_data, table_directory);
+    return_table = hhea_table_create(table_data, table_directory);
     break;
   case hmtx:
     break;
@@ -103,13 +103,13 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case loca:
     break;
   case maxp:
-    return_table = maxp_table_create((uint8_t*)table_data, table_directory);
+    return_table = maxp_table_create(table_data, table_directory);
     break;
   case name:
-    return_table = name_table_create((uint8_t*)table_data, table_directory);
+    return_table = name_table_create(table_data, table_directory);
     break;
   case post:
-    return_table = post_table_create((uint8_t*)table_data, table_directory);
+    return_table = post_table_create(table_data, table_directory);
     break;
   case prep:
     break;

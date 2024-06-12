@@ -22,6 +22,6 @@ typedef struct hhea_table {
   uint16_t number_of_h_metrics;
 } hhea_table_t;
 
-hhea_table_t* hhea_table_create(uint8_t* table_data, table_directory_t* table_directory);
+hhea_table_t* hhea_table_create(uint32_t* table_data, table_directory_t* table_directory);
 
 #endif // !DEBUG

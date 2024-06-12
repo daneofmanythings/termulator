@@ -11,13 +11,13 @@ static void test_printing_string_data_lengths(post_table_t* table, size_t string
 static void post_table_be_to_host(post_table_t* table);
 char* post_table_get_glyph_at(post_table_t* table, uint16_t glyph_num);
 
-post_table_t* post_table_create(uint8_t* table_data, table_directory_t* table_directory) {
+post_table_t* post_table_create(uint32_t* table_data, table_directory_t* table_directory) {
   post_table_t* table = (post_table_t*)malloc(sizeof(post_table_t));
   if (table == NULL) {
     return NULL; // TODO: error handling
   }
 
-  uint8_t* table_data_read_ptr = table_data;
+  uint8_t* table_data_read_ptr = (uint8_t*)table_data;
 
   memcpy(&table->header, table_data_read_ptr, sizeof(post_header_t));
   table_data_read_ptr += sizeof(post_header_t);

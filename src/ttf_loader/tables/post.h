@@ -28,7 +28,7 @@ typedef struct post_table {
   post_data_t data;
 } post_table_t;
 
-post_table_t* post_table_create(uint8_t* table_data, table_directory_t* table_directory);
+post_table_t* post_table_create(uint32_t* table_data, table_directory_t* table_directory);
 char* post_table_get_glyph_at(post_table_t* table, uint16_t glyph_num);
 
 #endif // !DEBUG

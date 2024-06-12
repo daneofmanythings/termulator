@@ -8,7 +8,7 @@
 static void os2_table_be_to_host(os2_table_t* table);
 
 // TODO: implement orrer handling
-os2_table_t* os2_table_create(uint8_t* table_data, table_directory_t* table_directory) {
+os2_table_t* os2_table_create(uint32_t* table_data, table_directory_t* table_directory) {
   os2_table_t* table = (os2_table_t*)malloc(sizeof(os2_table_t));
   if (table == NULL) {
     return NULL;

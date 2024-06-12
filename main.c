@@ -2,9 +2,8 @@
 
 #include "./src/ttf_loader.h"
 
-static const char* FONT_PATH = "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf";
-// static const char* FONT_PATH =
-// "/home/dane/.local/share/fonts/JetBrainsMonoNLNerdFont-Regular.ttf";
+// static const char* FONT_PATH = "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf";
+static const char* FONT_PATH = "/home/dane/.local/share/fonts/JetBrainsMonoNLNerdFont-Regular.ttf";
 
 int main(void) {
 

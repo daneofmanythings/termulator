@@ -8,7 +8,7 @@
 void gasp_table_be_to_host(gasp_table_t* table);
 void gasp_range_be_to_host(gasp_range_t* table);
 
-gasp_table_t* gasp_table_create(uint8_t* table_data, table_directory_t* table_directory) {
+gasp_table_t* gasp_table_create(uint32_t* table_data, table_directory_t* table_directory) {
   gasp_table_t* table = (gasp_table_t*)malloc(sizeof(gasp_table_t));
   if (table == NULL) {
     return NULL; // TODO: error handling

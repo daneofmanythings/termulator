@@ -24,6 +24,6 @@ typedef struct head_table {
   int16_t index_to_loc_format;
   int16_t glyph_data_format;
 } head_table_t;
-head_table_t* head_table_create(uint8_t* table_data, table_directory_t* table_directory);
+head_table_t* head_table_create(uint32_t* table_data, table_directory_t* table_directory);
 
 #endif // !DEBUG

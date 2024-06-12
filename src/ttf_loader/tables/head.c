@@ -5,7 +5,7 @@
 
 static void head_table_be_to_host(head_table_t* table);
 
-head_table_t* head_table_create(uint8_t* table_data, table_directory_t* table_directory) {
+head_table_t* head_table_create(uint32_t* table_data, table_directory_t* table_directory) {
   head_table_t* table = (head_table_t*)malloc(sizeof(head_table_t));
   if (table == NULL) {
     return NULL; // TODO: error handling
