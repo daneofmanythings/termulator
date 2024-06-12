@@ -14,6 +14,6 @@ typedef struct gasp_table {
   gasp_range_t gasp_ranges[];
 } gasp_table_t;
 
-gasp_table_t* gasp_table_create(FILE* font_file, table_directory_t* table_directory);
+gasp_table_t* gasp_table_create(uint8_t* table_data, table_directory_t* table_directory);
 
 #endif // !DEBUG

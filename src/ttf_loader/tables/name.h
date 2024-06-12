@@ -27,6 +27,6 @@ typedef struct name_table_t {
   lang_tag_record_t* lang_tag_records;
 } name_table_t;
 
-name_table_t* name_table_create(FILE* font_file, table_directory_t* table_directory);
+name_table_t* name_table_create(uint8_t* table_data, table_directory_t* table_directory);
 
 #endif // !DEBUG

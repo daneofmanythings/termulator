@@ -18,9 +18,9 @@ typedef struct post_header {
 } post_header_t;
 
 typedef struct post_data {
-  uint8_t* string_data;
   uint16_t num_glyphs;
-  uint16_t glyph_name_index[];
+  uint16_t* glyph_name_index;
+  uint8_t* string_data;
 } post_data_t;
 
 typedef struct post_table {
@@ -28,7 +28,7 @@ typedef struct post_table {
   post_data_t data;
 } post_table_t;
 
-post_table_t* post_table_create(FILE* font_file, table_directory_t* table_directory);
+post_table_t* post_table_create(uint8_t* table_data, table_directory_t* table_directory);
 char* post_table_get_glyph_at(post_table_t* table, uint16_t glyph_num);
 
 #endif // !DEBUG

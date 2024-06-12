@@ -35,6 +35,9 @@ test: $(TESTS)
 run: build
 	@ $(TARGETS)/main
 
+val: 
+	@ valgrind --tool=memcheck --leak-check=full $(TARGETS)/main
+
 clean:
 	@ rm $(TARGETS)/main
 	@ rm -rf $(OBJECTS)

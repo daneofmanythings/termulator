@@ -1,22 +1,20 @@
 #include <endian.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
-#include "../../lib.h"
-#include "font_table.h"
 #include "gasp.h"
 
 void gasp_table_be_to_host(gasp_table_t* table);
 void gasp_range_be_to_host(gasp_range_t* table);
 
-gasp_table_t* gasp_table_create(FILE* font_file, table_directory_t* table_directory) {
-  gasp_table_t* table = (gasp_table_t*)malloc(table_directory->length);
+gasp_table_t* gasp_table_create(uint8_t* table_data, table_directory_t* table_directory) {
+  gasp_table_t* table = (gasp_table_t*)malloc(sizeof(gasp_table_t));
   if (table == NULL) {
     return NULL; // TODO: error handling
   }
 
-  tl_fseek("gasp_table_create", font_file, table_directory->offset);
-  tl_fread(table, table_directory->length, 1, font_file);
+  memcpy(table, table_data, table_directory->length);
 
   gasp_table_be_to_host(table);
 

@@ -1,17 +1,16 @@
 #include "maxp.h"
-#include "../../lib.h"
 #include <endian.h>
+#include <string.h>
 
 static void maxp_table_be_to_host(maxp_table_t* table);
 
-maxp_table_t* maxp_table_create(FILE* font_file, table_directory_t* table_directory) {
-  maxp_table_t* table = (maxp_table_t*)malloc(table_directory->length);
+maxp_table_t* maxp_table_create(uint8_t* table_data, table_directory_t* table_directory) {
+  maxp_table_t* table = (maxp_table_t*)malloc(sizeof(maxp_table_t));
   if (table == NULL) {
     return NULL; // TODO: error handling
   }
 
-  tl_fseek("maxp", font_file, table_directory->offset);
-  tl_fread(table, table_directory->length, 1, font_file);
+  memcpy(table, table_data, table_directory->length);
 
   maxp_table_be_to_host(table);
 

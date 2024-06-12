@@ -37,14 +37,13 @@ enum {
   post = 1886352244,
   prep = 1886545264,
 };
+static uint32_t font_table_calculate_checksum(uint32_t* table, uint32_t length);
+static bool font_table_verify_checksum(const char* name, uint32_t checksum, uint32_t* table,
+                                       uint32_t length);
 
 void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
-  if (table_directory->tag == hhea || table_directory->tag == hmtx) {
-    return NULL;
-  }
   uint8_t tag_string[5] = {0};
   tag_stringify(table_directory->tag, tag_string);
-  printf("%s\n", tag_string);
 
   void* return_table = NULL;
   uint32_t* table_data = (uint32_t*)calloc(1, table_directory->length); // slow
@@ -73,29 +72,29 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case LTSH:
     break;
   case OS2:
-    return_table = os2_table_create(table_data, table_directory);
+    return_table = os2_table_create((uint8_t*)table_data, table_directory);
     break;
   case VDMX:
     break;
   case cmap:
-    return_table = cmap_table_create(font_file, table_directory);
+    return_table = cmap_table_create((uint8_t*)table_data, table_directory);
     break;
   case cvt:
     break;
   case fpgm:
     break;
   case gasp:
-    return_table = gasp_table_create(font_file, table_directory);
+    return_table = gasp_table_create((uint8_t*)table_data, table_directory);
     break;
   case glyf:
     break;
   case hdmx:
     break;
   case head:
-    return_table = head_table_create(font_file, table_directory);
+    return_table = head_table_create((uint8_t*)table_data, table_directory);
     break;
   case hhea:
-    return_table = hhea_table_create(table_data, table_directory);
+    return_table = hhea_table_create((uint8_t*)table_data, table_directory);
     break;
   case hmtx:
     break;
@@ -104,23 +103,81 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case loca:
     break;
   case maxp:
-    return_table = maxp_table_create(font_file, table_directory);
+    return_table = maxp_table_create((uint8_t*)table_data, table_directory);
     break;
   case name:
-    return_table = name_table_create(font_file, table_directory);
+    return_table = name_table_create((uint8_t*)table_data, table_directory);
     break;
   case post:
-    return_table = post_table_create(font_file, table_directory);
+    return_table = post_table_create((uint8_t*)table_data, table_directory);
     break;
   case prep:
     break;
   default:
-    printf("unknown table: %s (%u)\n", tag_string, table_directory->tag);
+    fprintf(stderr, "unknown table: %s (%u)\n", tag_string, table_directory->tag);
   }
 
-END:
+  // END:
   free(table_data);
   table_data = NULL;
 
   return return_table;
 }
+
+/* NOTE:
+
+This function assumes that the length of any table is a multiple of four bytes,
+or that tables are padded with zero to four-byte aligned offsets. Actual table lengths
+recorded in the table directory should not include padding, however. To accommodate
+data with a length that is not a multiple of four, the below algorithm must be modified
+to treat the data as though it contains zero padding to a length that is a multiple of four.
+
+*/
+static uint32_t font_table_calculate_checksum(uint32_t* table, uint32_t length) {
+  uint32_t sum = 0L;
+  uint32_t* end_ptr = table + ((length + 3) & ~3) / sizeof(uint32_t);
+  while (table < end_ptr) {
+    sum += be32toh(*table);
+    table++;
+  }
+  return sum;
+}
+
+static bool font_table_verify_checksum(const char* name, uint32_t checksum, uint32_t* table,
+                                       uint32_t length) {
+  uint32_t calculated_checksum = font_table_calculate_checksum(table, length);
+  if (checksum != calculated_checksum) {
+    fprintf(stderr, "'%s' INVALID CHECKSUM. %u != %u\n", name, checksum, calculated_checksum);
+    return false;
+  }
+  return true;
+}
+//
+// TODO: implement the special checksum verification for the head table.
+// https://learn.microsoft.com/en-us/typography/opentype/spec/head
+
+/*
+  The 'head' table is a special case in checksum calculations, as it includes
+  a checksumAdjustment field that is calculated and written after the table’s
+  checksum is calculated and written into the table directory entry, necessarily
+  invalidating that checksum value.
+
+  When generating font data, to calculate and write the 'head' table checksum and
+  checksumAdjustment field, do the following:
+
+  1. Set the checksumAdjustment field to 0.
+  2. Calculate the checksum for all tables including the 'head' table and
+     enter the value for each table into the corresponding record in the table directory.
+  3. Calculate the checksum for the entire font.
+  4. Subtract that value from 0xB1B0AFBA.
+  5. Store the result in the 'head' table checksumAdjustment field.
+
+  An application attempting to verify that the 'head' table has not changed should
+  calculate the checksum for that table assuming that the checksumAdjustment value
+  is zero, rather than the actual value in the font, before comparing the result with
+  the 'head' table record in the table directory.
+
+  Within a font collection file (see below), table checksums must reflect the tables as
+  they are in the collection file. The checksumAdjustment field in the 'head' table is
+  not used for collection files and may be set to zero.
+*/

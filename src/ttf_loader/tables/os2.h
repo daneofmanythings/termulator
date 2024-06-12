@@ -41,6 +41,6 @@ typedef struct os2_table {
   uint16_t us_upper_optical_point_size;
 } os2_table_t;
 
-os2_table_t* os2_table_create(uint32_t* table_data, table_directory_t* table_directory);
+os2_table_t* os2_table_create(uint8_t* table_data, table_directory_t* table_directory);
 
 #endif // !DEBUG

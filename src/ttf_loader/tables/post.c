@@ -1,47 +1,62 @@
-#include "post.h"
-#include "../../lib.h"
 #include <assert.h>
 #include <endian.h>
+#include <stdint.h>
 #include <string.h>
 
+#include "post.h"
+
 static inline void test_printer(post_table_t* table);
-static void test_printing_string_data_lengths(post_table_t* table);
+static void test_printing_string_data_lengths(post_table_t* table, size_t string_data_length);
 
 static void post_table_be_to_host(post_table_t* table);
 char* post_table_get_glyph_at(post_table_t* table, uint16_t glyph_num);
 
-post_table_t* post_table_create(FILE* font_file, table_directory_t* table_directory) {
-  post_table_t* table = (post_table_t*)malloc(table_directory->length);
+post_table_t* post_table_create(uint8_t* table_data, table_directory_t* table_directory) {
+  post_table_t* table = (post_table_t*)malloc(sizeof(post_table_t));
   if (table == NULL) {
     return NULL; // TODO: error handling
   }
-  tl_fseek("post", font_file, table_directory->offset);
-  tl_fread(table, sizeof(table->header), 1, font_file);
-  tl_fread(&table->data.num_glyphs, sizeof(uint16_t), 1, font_file);
-  tl_fread(&table->data.glyph_name_index, sizeof(uint16_t) * be16toh(table->data.num_glyphs), 1,
-           font_file);
-  post_table_be_to_host(table);
 
-  if (table->header.version == 0x00025000) { // version 2.5 is not supported
-    fprintf(stderr, "ERROR: 'post' table version '2.5' is not supported.\n");
+  uint8_t* table_data_read_ptr = table_data;
+
+  memcpy(&table->header, table_data_read_ptr, sizeof(post_header_t));
+  table_data_read_ptr += sizeof(post_header_t);
+
+  if (table->header.version == 0x00025000) {
+    fprintf(stderr, "post_table::create::ERROR ('post' table version '2.5' is not supported.)\n");
     free(table);
     table = NULL;
     return NULL;
   }
 
-  // calculate the length of the string data
+  memcpy(&table->data.num_glyphs, table_data_read_ptr, sizeof(uint16_t));
+  table_data_read_ptr += sizeof(uint16_t);
+
+  size_t glyph_name_index_length = be16toh(table->data.num_glyphs) * sizeof(uint16_t);
+  uint16_t* glyph_name_index = (uint16_t*)malloc(glyph_name_index_length);
+  if (glyph_name_index == NULL) {
+    free(table);
+    table = NULL;
+    return NULL; // TODO: error handling
+  }
+
+  memcpy(glyph_name_index, table_data_read_ptr, glyph_name_index_length);
+  table_data_read_ptr += glyph_name_index_length;
+  table->data.glyph_name_index = glyph_name_index;
+
+  post_table_be_to_host(table);
+
   size_t string_data_length = table_directory->length - sizeof(table->header) -
                               sizeof(uint16_t) * (table->data.num_glyphs + 1);
 
-  // allocate for the string data
   uint8_t* string_data = (uint8_t*)malloc(string_data_length);
   if (string_data == NULL) {
     return NULL; // TODO: error handling
   }
-  // copy over the string data
-  tl_fread(string_data, string_data_length, 1, font_file);
-
+  memcpy(string_data, table_data_read_ptr, string_data_length);
   table->data.string_data = string_data;
+
+  // test_printing_string_data_lengths(table, string_data_length);
 
   return table;
 }
@@ -95,10 +110,10 @@ static inline void test_printer(post_table_t* table) {
   printf("\n");
 }
 
-static void test_printing_string_data_lengths(post_table_t* table) {
+static void test_printing_string_data_lengths(post_table_t* table, size_t string_data_length) {
   size_t i = 0;
   uint8_t len = 0;
-  while (i < 10000) {
+  while (i < string_data_length) {
     len = table->data.string_data[i];
     printf("string %zu, length %d, value: ", i, len);
     for (size_t j = 1; j <= len; j++) {

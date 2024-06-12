@@ -22,6 +22,6 @@ typedef struct maxp_table {
   uint16_t max_component_depth;
 } maxp_table_t;
 
-maxp_table_t* maxp_table_create(FILE* font_file, table_directory_t* table_directory);
+maxp_table_t* maxp_table_create(uint8_t* table_data, table_directory_t* table_directory);
 
 #endif // !DEBUG

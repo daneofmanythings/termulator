@@ -8,8 +8,8 @@
 
 static void hhea_table_be_to_host(hhea_table_t* table);
 
-hhea_table_t* hhea_table_create(uint32_t* table_data, table_directory_t* table_directory) {
-  hhea_table_t* table = (hhea_table_t*)malloc(table_directory->length);
+hhea_table_t* hhea_table_create(uint8_t* table_data, table_directory_t* table_directory) {
+  hhea_table_t* table = (hhea_table_t*)malloc(sizeof(hhea_table_t));
   if (table == NULL) {
     return NULL; // TODO: error handling
   }
