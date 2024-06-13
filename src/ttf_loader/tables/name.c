@@ -26,13 +26,11 @@ static void lang_tag_record_print(lang_tag_record_t* lang_tag_record) {
 
 static void string_data_print(name_table_t* table, uint16_t length, uint16_t offset) {
   for (size_t i = 0; i < length; ++i) {
-    printf("%c", table->string_data[offset + i - 1]);
+    printf("%c", table->string_data[offset + i]);
   }
   printf("\n");
 }
 
-// TODO: VERIFY THAT THE NAME_RECORDS ARE BEING PARSED CORRECTLY, AND THAT THE STRING DATA
-// IS BEING LOADED CORRECTLY. THE STRINGS SEEM FISHY.
 name_table_t* name_table_create(uint32_t* table_data, table_directory_t* table_directory) {
 
   name_table_t* table = (name_table_t*)malloc(sizeof(name_table_t));
@@ -78,7 +76,6 @@ name_table_t* name_table_create(uint32_t* table_data, table_directory_t* table_d
 
     for (size_t i = 0; i < table->lang_tag_count; ++i) {
       lang_tag_record_be_to_host(&lang_tag_records[i]);
-      // lang_tag_record_print(&lang_tag_records[i]);
     }
   }
 
@@ -88,8 +85,6 @@ name_table_t* name_table_create(uint32_t* table_data, table_directory_t* table_d
   if (string_data == NULL) {
     return NULL; // TODO: error handling
   }
-
-  table_data_read_ptr = (uint8_t*)table + table->storage_offset;
 
   memcpy(string_data, table_data_read_ptr, string_data_length);
   table->string_data = string_data;
