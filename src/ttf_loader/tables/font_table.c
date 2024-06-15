@@ -114,7 +114,8 @@ void* font_table_create(FILE* font_file, table_directory_t* table_directory) {
   case prep:
     break;
   default:
-    fprintf(stderr, "unknown table: %s (%u)\n", tag_string, table_directory->tag);
+    fprintf(stderr, "font_table::create::unknown table: %s (%u)\n", tag_string,
+            table_directory->tag);
   }
 
   // END:
@@ -152,7 +153,7 @@ static bool font_table_verify_checksum(const char* name, uint32_t checksum, uint
   }
   return true;
 }
-//
+
 // TODO: implement the special checksum verification for the head table.
 // https://learn.microsoft.com/en-us/typography/opentype/spec/head
 
@@ -181,3 +182,64 @@ static bool font_table_verify_checksum(const char* name, uint32_t checksum, uint
   they are in the collection file. The checksumAdjustment field in the 'head' table is
   not used for collection files and may be set to zero.
 */
+
+void font_table_destroy(TAG tag, void* table) {
+  switch (tag) {
+  case DSIG:
+    break;
+  case FFTM:
+    break;
+  case GSUB:
+    break;
+  case GDEF:
+    break;
+  case GPOS:
+    break;
+  case LTSH:
+    break;
+  case OS2:
+    os2_table_destroy(table);
+    break;
+  case VDMX:
+    break;
+  case cmap:
+    cmap_table_destroy(table);
+    break;
+  case cvt:
+    break;
+  case fpgm:
+    break;
+  case gasp:
+    gasp_table_destroy(table);
+    break;
+  case glyf:
+    break;
+  case hdmx:
+    break;
+  case head:
+    head_table_destroy(table);
+    break;
+  case hhea:
+    hhea_table_destroy(table);
+    break;
+  case hmtx:
+    break;
+  case kern:
+    break;
+  case loca:
+    break;
+  case maxp:
+    maxp_table_destroy(table);
+    break;
+  case name:
+    name_table_destroy(table);
+    break;
+  case post:
+    post_table_destroy(table);
+    break;
+  case prep:
+    break;
+  default:
+    fprintf(stderr, "font_table::destroy::unknown table: %u\n", tag);
+  }
+}

@@ -42,5 +42,6 @@ typedef struct os2_table {
 } os2_table_t;
 
 os2_table_t* os2_table_create(uint32_t* table_data, table_directory_t* table_directory);
+void os2_table_destroy(os2_table_t* table);
 
 #endif // !DEBUG

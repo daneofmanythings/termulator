@@ -38,3 +38,12 @@ static void head_table_be_to_host(head_table_t* table) {
   table->index_to_loc_format = be16toh(table->index_to_loc_format);
   table->glyph_data_format = be16toh(table->glyph_data_format);
 }
+
+void head_table_destroy(head_table_t* table) {
+  if (table == NULL) {
+    return;
+  }
+
+  free(table);
+  table = NULL;
+}

@@ -38,3 +38,12 @@ static void maxp_table_be_to_host(maxp_table_t* table) {
   table->max_size_of_instuctions = be16toh(table->max_size_of_instuctions);
   table->max_component_elements = be16toh(table->max_component_elements);
 }
+
+void maxp_table_destroy(maxp_table_t* table) {
+  if (table == NULL) {
+    return;
+  }
+
+  free(table);
+  table = NULL;
+}

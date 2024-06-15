@@ -77,6 +77,25 @@ static void post_table_be_to_host(post_table_t* table) {
   }
 }
 
+void post_table_destroy(post_table_t* table) {
+  if (table == NULL) {
+    return;
+  }
+
+  if (table->data.glyph_name_index != NULL) {
+    free(table->data.glyph_name_index);
+    table->data.glyph_name_index = NULL;
+  }
+
+  if (table->data.string_data != NULL) {
+    free(table->data.string_data);
+    table->data.string_data = NULL;
+  }
+
+  free(table);
+  table = NULL;
+}
+
 // TODO: validate the position within string_data. possibly store string_data length.
 char* post_table_get_glyph_at(post_table_t* table, uint16_t glyph_num) {
   if (glyph_num >= table->data.num_glyphs) {

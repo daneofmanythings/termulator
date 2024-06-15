@@ -15,5 +15,6 @@ typedef struct gasp_table {
 } gasp_table_t;
 
 gasp_table_t* gasp_table_create(uint32_t* table_data, table_directory_t* table_directory);
+void gasp_table_destroy(gasp_table_t* table);
 
 #endif // !DEBUG

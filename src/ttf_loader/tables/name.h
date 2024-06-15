@@ -29,5 +29,6 @@ typedef struct name_table_t {
 } name_table_t;
 
 name_table_t* name_table_create(uint32_t* table_data, table_directory_t* table_directory);
+void name_table_destroy(name_table_t* table);
 
 #endif // !DEBUG

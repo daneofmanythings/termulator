@@ -23,5 +23,6 @@ typedef struct hhea_table {
 } hhea_table_t;
 
 hhea_table_t* hhea_table_create(uint32_t* table_data, table_directory_t* table_directory);
+void hhea_table_destroy(hhea_table_t* table);
 
 #endif // !DEBUG

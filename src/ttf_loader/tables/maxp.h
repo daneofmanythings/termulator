@@ -23,5 +23,6 @@ typedef struct maxp_table {
 } maxp_table_t;
 
 maxp_table_t* maxp_table_create(uint32_t* table_data, table_directory_t* table_directory);
+void maxp_table_destroy(maxp_table_t* table);
 
 #endif // !DEBUG

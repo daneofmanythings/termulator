@@ -17,6 +17,7 @@ typedef struct cmap_table {
   void* subtables;
 } cmap_table_t;
 cmap_table_t* cmap_table_create(uint32_t* table_data, table_directory_t* table_directory);
+void cmap_table_destroy(cmap_table_t* table);
 
 // SUBTABLES ////////////////////////////////////////////
 
@@ -35,7 +36,7 @@ typedef struct cmap_subtable_v2 { // high byte mapping through table
   uint16_t length;
   uint16_t language;
   uint16_t sub_header_keys[256];
-  v2_sub_header_t* sub_headers; // TODO: implement;
+  v2_sub_header_t* sub_headers;
   uint16_t* glyph_id_array;
 } cmap_subtable_v2_t;
 
@@ -158,24 +159,24 @@ struct v14_variation_selector {
   OFFSET32 non_default_uvs_offset;
 };
 
-typedef struct v14_default_uvs_table {
+struct v14_default_uvs_table {
   uint32_t num_unicode_value_ranges;
   unicode_range_t* ranges;
-} v14_default_uvs_table_t;
+};
 
-typedef struct v14_non_default_uvs_table {
+struct v14_non_default_uvs_table {
   uint32_t num_uvs_mappings;
   uvs_mapping_t* uvs_mappings;
-} v14_non_default_uvs_table_t;
+};
 
-typedef struct unicode_range {
+struct unicode_range {
   uint8_t start_unicode_value[3]; // uint24_t
   uint8_t additional_count;
-} unicode_range_t;
+};
 
-typedef struct uvs_mapping {
+struct uvs_mapping {
   uint8_t unicode_value[3]; // uint24_t
   uint16_t glyph_id;
-} uvs_mapping_t;
+};
 
 #endif // !DEBUG

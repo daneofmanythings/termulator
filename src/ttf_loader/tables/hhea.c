@@ -40,3 +40,12 @@ static void hhea_table_be_to_host(hhea_table_t* table) {
   table->metric_data_format = be16toh(table->metric_data_format);
   table->number_of_h_metrics = be16toh(table->number_of_h_metrics);
 }
+
+void hhea_table_destroy(hhea_table_t* table) {
+  if (table == NULL) {
+    return;
+  }
+
+  free(table);
+  table = NULL;
+}

@@ -25,5 +25,6 @@ typedef struct head_table {
   int16_t glyph_data_format;
 } head_table_t;
 head_table_t* head_table_create(uint32_t* table_data, table_directory_t* table_directory);
+void head_table_destroy(head_table_t* table);
 
 #endif // !DEBUG

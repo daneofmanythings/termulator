@@ -33,3 +33,11 @@ void gasp_range_be_to_host(gasp_range_t* table) {
   table->range_max_ppem = be16toh(table->range_max_ppem);
   table->range_gasp_behavior = be16toh(table->range_gasp_behavior);
 }
+
+void gasp_table_destroy(gasp_table_t* table) {
+  if (table == NULL) {
+    return;
+  }
+  free(table);
+  table = NULL;
+}

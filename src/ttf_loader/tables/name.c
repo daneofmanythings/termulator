@@ -18,12 +18,6 @@ static void name_record_print(name_record_t* name_record) {
   printf("string_offset: %d\n", name_record->string_offset);
 }
 
-static void lang_tag_record_print(lang_tag_record_t* lang_tag_record) {
-  printf("----\n");
-  printf("length: %d\n", lang_tag_record->length);
-  printf("lang_tag_offset: %d\n", lang_tag_record->lang_tag_offset);
-}
-
 static void string_data_print(name_table_t* table, uint16_t length, uint16_t offset) {
   for (size_t i = 0; i < length; ++i) {
     printf("%c", table->string_data[offset + i]);
@@ -32,7 +26,6 @@ static void string_data_print(name_table_t* table, uint16_t length, uint16_t off
 }
 
 name_table_t* name_table_create(uint32_t* table_data, table_directory_t* table_directory) {
-
   name_table_t* table = (name_table_t*)malloc(sizeof(name_table_t));
   if (table == NULL) {
     return NULL; // TODO: error handling
@@ -59,7 +52,7 @@ name_table_t* name_table_create(uint32_t* table_data, table_directory_t* table_d
   table_data_read_ptr += sizeof(name_record_t) * table->count;
   table->name_records = name_records;
 
-  table->lang_tag_count = 0;
+  table->lang_tag_count = 0; // zeroing out potentially unused fields
   table->lang_tag_records = NULL;
   if (table->version == 1) {
     memcpy(&table->lang_tag_count, table_data_read_ptr, sizeof(uint16_t));
@@ -116,4 +109,30 @@ static void name_record_be_to_host(name_record_t* name_record) {
 static void lang_tag_record_be_to_host(lang_tag_record_t* lang_tag_record) {
   lang_tag_record->length = be16toh(lang_tag_record->length);
   lang_tag_record->lang_tag_offset = be16toh(lang_tag_record->lang_tag_offset);
+}
+
+void name_table_destroy(name_table_t* table) {
+  if (table == NULL) {
+    return;
+  }
+
+  if (table->string_data != NULL) {
+    free(table->string_data);
+    table->string_data = NULL;
+  }
+
+  if (table->lang_tag_records != NULL) {
+    free(table->lang_tag_records);
+    table->lang_tag_records = NULL;
+  }
+
+  if (table->name_records == NULL) {
+    free(table->name_records);
+    table->name_records = NULL;
+  }
+
+  free(table);
+  table = NULL;
+
+  // TODO: implement
 }

@@ -5,7 +5,7 @@ INCLUDES= -I./
 OBJECTS= \
 				 ./build/lib/io.o \
 				 ./build/containers/buffer.o \
-				 ./build/ttf_loader/ttf_loader.o \
+				 ./build/ttf_loader/ttf_font_data.o \
 				 ./build/ttf_loader/tables/font_directory.o \
 				 ./build/ttf_loader/tables/font_table.o \
 				 ./build/ttf_loader/tables/cmap.o \
@@ -52,8 +52,8 @@ clean:
 ./build/lib/io.o: ./src/lib/io.c
 	@ cc ./src/lib/io.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/lib/io.o
 
-./build/ttf_loader/ttf_loader.o: ./src/ttf_loader/ttf_loader.c
-	@ cc ./src/ttf_loader/ttf_loader.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/ttf_loader.o
+./build/ttf_loader/ttf_font_data.o: ./src/ttf_loader/ttf_font_data.c
+	@ cc ./src/ttf_loader/ttf_font_data.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/ttf_font_data.o
 
 ./build/ttf_loader/tables/font_directory.o: ./src/ttf_loader/tables/font_directory.c
 	@ cc ./src/ttf_loader/tables/font_directory.c $(INCLUDES) $(FLAGS) $(LIBRARIES) -c -o ./build/ttf_loader/tables/font_directory.o

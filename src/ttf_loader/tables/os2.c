@@ -76,3 +76,12 @@ static void os2_table_be_to_host(os2_table_t* table) {
   table->us_lower_optical_point_size = be16toh(table->us_lower_optical_point_size);
   table->us_upper_optical_point_size = be16toh(table->us_upper_optical_point_size);
 }
+
+void os2_table_destroy(os2_table_t* table) {
+  if (table == NULL) {
+    return;
+  }
+
+  free(table);
+  table = NULL;
+}
